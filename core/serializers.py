@@ -18,7 +18,7 @@ class ServiceSerializer(serializers.ModelSerializer):
         model = Service
         fields = [
             'id', 'title', 'slug', 'category', 'category_name', 'icon',
-            'short_description', 'features', 'features_list',
+            'short_description', 'full_description', 'features', 'features_list',
             'image_url', 'is_featured', 'is_active', 'order', 'created_at'
         ]
 
@@ -31,7 +31,7 @@ class RealizationSerializer(serializers.ModelSerializer):
         model = Realization
         fields = [
             'id', 'title', 'slug', 'category', 'category_name', 'client_name',
-            'short_description', 'tech_stack', 'tech_tags',
+            'short_description', 'full_description', 'tech_stack', 'tech_tags',
             'image_url', 'completion_date', 'project_url', 'is_featured', 'is_active', 'created_at'
         ]
 
@@ -46,7 +46,7 @@ class ApplicationSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'title', 'slug', 'category', 'category_name', 'platform',
             'platform_display', 'version', 'icon', 'short_description',
-            'tech_stack', 'tech_tags', 'image_url',
+            'full_description', 'tech_stack', 'tech_tags', 'image_url',
             'demo_url', 'download_url', 'badge', 'is_featured', 'is_active',
             'order', 'created_at'
         ]
@@ -62,7 +62,7 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = [
             'id', 'name', 'slug', 'category', 'category_name', 'category_slug',
-            'price', 'discount_price', 'current_price', 'short_description',
+            'price', 'discount_price', 'current_price', 'short_description', 'full_description',
             'stock', 'badge', 'rating', 'reviews_count',
             'image_url', 'specs', 'specs_dict', 'is_featured', 'is_active', 'created_at'
         ]
@@ -94,5 +94,5 @@ class OrderSerializer(serializers.ModelSerializer):
 class ContactMessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactMessage
-        fields = ['id', 'name', 'email', 'phone', 'subject', 'service_interest', 'message', 'created_at']
-        read_only_fields = ['id', 'created_at']
+        fields = ['id', 'name', 'email', 'phone', 'subject', 'service_interest', 'message', 'is_read', 'created_at']
+        read_only_fields = ['id', 'name', 'email', 'phone', 'subject', 'service_interest', 'message', 'created_at']
