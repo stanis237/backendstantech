@@ -92,6 +92,7 @@ if cors_allowed_env:
     CORS_ALLOWED_ORIGINS = [orig.strip() for orig in cors_allowed_env.split(',') if orig.strip()]
 
 CORS_ALLOW_CREDENTIALS = True
+CORS_EXPOSE_HEADERS = ['Content-Disposition']
 CORS_ALLOW_METHODS = [
     'DELETE',
     'GET',
@@ -115,6 +116,8 @@ CORS_ALLOW_HEADERS = [
 
 ROOT_URLCONF = 'stantech_project.urls'
 
+FRONTEND_URL = os.environ.get('FRONTEND_URL', 'https://fronts-theta.vercel.app').rstrip('/')
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -126,6 +129,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'core.context_processors.cart_context',
+                'core.context_processors.frontend_context',
             ],
             'libraries': {
                 'custom_filters': 'core.templatetags.custom_filters',
@@ -155,25 +159,6 @@ if os.environ.get('DATABASE_URL'):
         conn_health_checks=True,
         ssl_require=True,
     )
-
-
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
-
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
 
 
 # Internationalization

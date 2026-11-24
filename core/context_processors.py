@@ -24,3 +24,9 @@ def cart_context(request):
         'cart_total': total_price,
         'cart_items': cart,
     }
+
+
+def frontend_context(request):
+    from django.conf import settings
+
+    return {'frontend_url': settings.FRONTEND_URL}

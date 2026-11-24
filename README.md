@@ -1,6 +1,6 @@
 # ⚙️ STANTECH CONSULTING - Backend Django (REST API)
 
-Ce dossier `backend/` contient l'API REST complète et le back-office d'administration de **STANTECH CONSULTING**, prêt pour un déploiement indépendant (sur Render, Railway, Heroku, Fly.io ou un VPS).
+Ce dépôt contient l'API REST Django, le dashboard admin complet et ses templates Django. Il est déployé indépendamment du frontend statique Vercel sur PythonAnywhere.
 
 ---
 
@@ -12,7 +12,7 @@ backend/
 ├── stantech_project/       # Configuration Django (settings, wsgi, asgi, urls)
 ├── templates/              # Templates du Dashboard admin custom & SSR
 ├── static/                 # Fichiers statiques du backend et de l'administration
-├── staticfiles/            # Fichiers compilés par collectstatic
+├── staticfiles/            # Générés par collectstatic (ne pas versionner)
 ├── media/                  # Fichiers média téléversés (images produits, APK Android)
 ├── manage.py               # Script de gestion Django
 ├── requirements.txt        # Dépendances Python
@@ -45,25 +45,27 @@ L'API utilise Django REST Framework et autorise le CORS pour communiquer de mani
 
 ## 🚀 Déploiement du Backend
 
-### Option A : Déploiement sur Render (Recommandé - Gratuit)
-1. Créez un compte sur [render.com](https://render.com).
-2. Cliquez sur **New +** -> **Web Service**.
-3. Connectez votre dépôt GitHub.
-4. Définissez :
-   * **Root Directory** : `backend`
-   * **Environment** : `Python 3`
-   * **Build Command** : `pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate`
-   * **Start Command** : `gunicorn stantech_project.wsgi:application`
-5. Ajoutez les variables d'environnement :
-   * `SECRET_KEY` : *(votre clé secrète Django)*
-   * `DEBUG` : `False`
-   * `ALLOWED_HOSTS` : `*` ou `.onrender.com`
-   * `CORS_ALLOW_ALL` : `True`
+### Déploiement sur PythonAnywhere
+1. Dans PythonAnywhere, créez une application Web **Manual configuration** avec une version Python compatible avec `requirements.txt`.
+2. Dans une console Bash, clonez `https://github.com/stanis237/backendstantech.git` dans votre compte, puis créez un virtualenv compatible avec la version Python choisie.
+3. Installez les dépendances avec `pip install -r ~/backend/requirements.txt` et indiquez ce virtualenv dans l’onglet Web.
+4. Configurez le fichier WSGI de l’application :
+   ```python
+   import os
+   import sys
 
-### Option B : Déploiement sur Railway
-1. Ouvrez [railway.app](https://railway.app) -> **New Project** -> **Deploy from GitHub repo**.
-2. Dans les paramètres, indiquez **Root Directory** = `backend`.
-3. Railway détecte automatiquement le `Procfile` et le `requirements.txt`.
+   project = '/home/VOTRE_UTILISATEUR/backend'
+   if project not in sys.path:
+       sys.path.insert(0, project)
+   os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'stantech_project.settings')
+   from django.core.wsgi import get_wsgi_application
+   application = get_wsgi_application()
+   ```
+5. Créez `~/backend/.env` à partir de `.env.example`, avec une clé secrète privée et `DEBUG=False`. N’ajoutez jamais `.env` au dépôt.
+6. Dans une console Bash, exécutez `cd ~/backend && python manage.py migrate && python manage.py collectstatic --noinput`.
+7. Dans l’onglet Web, mappez `/static/` sur `/home/VOTRE_UTILISATEUR/backend/staticfiles` et `/media/` sur `/home/VOTRE_UTILISATEUR/backend/media`, puis rechargez l’application.
+
+Le frontend appelle `https://stantechbackend.pythonanywhere.com`. Définissez `CORS_ALLOWED_ORIGINS=https://fronts-theta.vercel.app` et `CORS_ALLOW_ALL=False`. Définissez également `FRONTEND_URL=https://fronts-theta.vercel.app` : les liens « Voir le site » du login et du dashboard redirigent ainsi directement vers Vercel. Le dashboard Django reste accessible sous `/dashboard/login/`.
 
 ---
 

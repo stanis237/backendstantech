@@ -1,5 +1,8 @@
 from rest_framework import serializers
-from .models import Category, Service, Realization, Product, Order, OrderItem, ContactMessage, Application
+from .models import (
+    Application, Category, ContactMessage, CustomInvoice, CustomInvoiceItem,
+    Order, OrderItem, Product, Realization, Service,
+)
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -96,3 +99,47 @@ class ContactMessageSerializer(serializers.ModelSerializer):
         model = ContactMessage
         fields = ['id', 'name', 'email', 'phone', 'subject', 'service_interest', 'message', 'is_read', 'created_at']
         read_only_fields = ['id', 'name', 'email', 'phone', 'subject', 'service_interest', 'message', 'created_at']
+
+
+class CustomInvoiceItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomInvoiceItem
+        fields = ['id', 'description', 'quantity', 'unit_price', 'subtotal']
+        read_only_fields = ['id', 'subtotal']
+
+
+class CustomInvoiceSerializer(serializers.ModelSerializer):
+    items = CustomInvoiceItemSerializer(many=True, required=False)
+    invoice_type_display = serializers.CharField(source='get_invoice_type_display', read_only=True)
+    status_display = serializers.CharField(source='get_status_display', read_only=True)
+
+    class Meta:
+        model = CustomInvoice
+        fields = [
+            'id', 'invoice_number', 'invoice_type', 'invoice_type_display',
+            'client_name', 'client_email', 'client_phone', 'client_address',
+            'city', 'issue_date', 'due_date', 'status', 'status_display',
+            'payment_method', 'tax_rate', 'subtotal', 'tax_amount', 'total_amount',
+            'notes', 'items', 'created_at', 'updated_at',
+        ]
+        read_only_fields = ['id', 'subtotal', 'tax_amount', 'total_amount', 'created_at', 'updated_at']
+
+    def create(self, validated_data):
+        items_data = validated_data.pop('items', [])
+        invoice = CustomInvoice.objects.create(**validated_data)
+        for item_data in items_data:
+            CustomInvoiceItem.objects.create(invoice=invoice, **item_data)
+        invoice.recalculate_totals()
+        return invoice
+
+    def update(self, instance, validated_data):
+        items_data = validated_data.pop('items', None)
+        for field, value in validated_data.items():
+            setattr(instance, field, value)
+        instance.save()
+        if items_data is not None:
+            instance.items.all().delete()
+            for item_data in items_data:
+                CustomInvoiceItem.objects.create(invoice=instance, **item_data)
+        instance.recalculate_totals()
+        return instance

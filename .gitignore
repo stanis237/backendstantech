@@ -1,0 +1,11 @@
+# Python-generated files
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+
+# Django generated assets and local-only backups
+staticfiles/
+.local-backups/
+*.log
