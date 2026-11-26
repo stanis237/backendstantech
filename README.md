@@ -65,7 +65,7 @@ L'API utilise Django REST Framework et autorise le CORS pour communiquer de mani
 6. Dans une console Bash, exécutez `cd ~/backend && python manage.py migrate && python manage.py collectstatic --noinput`.
 7. Dans l’onglet Web, mappez `/static/` sur `/home/VOTRE_UTILISATEUR/backend/staticfiles` et `/media/` sur `/home/VOTRE_UTILISATEUR/backend/media`, puis rechargez l’application.
 
-Le frontend appelle `https://stantechbackend.pythonanywhere.com`. Définissez `CORS_ALLOWED_ORIGINS=https://fronts-theta.vercel.app` et `CORS_ALLOW_ALL=False`. Définissez également `FRONTEND_URL=https://fronts-theta.vercel.app` : les liens « Voir le site » du login et du dashboard redirigent ainsi directement vers Vercel. Le dashboard Django reste accessible sous `/dashboard/login/`.
+Le frontend appelle `https://stantechbackend.pythonanywhere.com`. Définissez `CORS_ALLOWED_ORIGINS=https://fronts-theta.vercel.app` et `CORS_ALLOW_ALL=False`. Définissez également `FRONTEND_URL=https://fronts-gifbrp724-stanis237s-projects.vercel.app/` : les liens « Voir le site » du login et du dashboard redirigent ainsi directement vers Vercel. Le dashboard Django reste accessible sous `/dashboard/login/`.
 
 ---
 

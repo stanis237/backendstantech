@@ -90,6 +90,16 @@ CORS_ALLOW_ALL_ORIGINS = os.environ.get('CORS_ALLOW_ALL', 'True') == 'True'
 cors_allowed_env = os.environ.get('CORS_ALLOWED_ORIGINS', '')
 if cors_allowed_env:
     CORS_ALLOWED_ORIGINS = [orig.strip() for orig in cors_allowed_env.split(',') if orig.strip()]
+else:
+    CORS_ALLOWED_ORIGINS = [
+        'https://www.stantechconsulting.site',
+        'https://stantechconsulting.site',
+        'https://fronts-gifbrp724-stanis237s-projects.vercel.app',
+        'https://fronts-theta.vercel.app',
+        'http://localhost:3000',
+        'http://localhost:5500',
+        'http://127.0.0.1:5500',
+    ]
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_EXPOSE_HEADERS = ['Content-Disposition']
@@ -116,7 +126,14 @@ CORS_ALLOW_HEADERS = [
 
 ROOT_URLCONF = 'stantech_project.urls'
 
-FRONTEND_URL = os.environ.get('FRONTEND_URL', 'https://fronts-theta.vercel.app').rstrip('/')
+FRONTEND_URL = os.environ.get('FRONTEND_URL', 'https://www.stantechconsulting.site').rstrip('/')
+LEGACY_FRONTEND_URL = 'https://fronts-gifbrp724-stanis237s-projects.vercel.app'
+FRONTEND_URLS = [
+    FRONTEND_URL,
+    LEGACY_FRONTEND_URL,
+    'https://fronts-theta.vercel.app',
+    'https://stantechconsulting.site',
+]
 
 TEMPLATES = [
     {
